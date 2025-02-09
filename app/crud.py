@@ -17,7 +17,8 @@ def create_wallet_request(db: Session, wallet_address: str):
 
 def get_wallet_requests(db: Session, page: int = 1, per_page: int = 10):
     try:
-        total_records = db.query(WalletRequest).count()
+        query = db.query(WalletRequest)
+        total_records = query.count()
         total_pages = (total_records + per_page - 1) // per_page
         offset = (page - 1) * per_page
 

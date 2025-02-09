@@ -45,4 +45,4 @@ def get_wallet_info(address: str):
         raise HTTPException(status_code=400, detail="Неверный адрес")
     except Exception as e:
         logger.exception(f"Неожиданная ошибка: {e}")
-        raise HTTPException(status_code=500, detail="Внутрення ошибка сервера")
+        raise HTTPException(status_code=500, detail="Внутренняя ошибка сервера")
