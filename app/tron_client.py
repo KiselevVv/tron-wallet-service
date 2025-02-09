@@ -1,13 +1,13 @@
 import logging
 
+from fastapi import HTTPException
 from tronpy import Tron
 from tronpy.exceptions import AddressNotFound, BadAddress
 
+logger = logging.getLogger(__name__)
 
 # client = Tron()  основная сеть
 client = Tron(network="nile")  # тестовая сеть
-
-logging.basicConfig(level=logging.INFO)
 
 
 def get_account_energy(address: str):
@@ -18,36 +18,31 @@ def get_account_energy(address: str):
         total_energy_limit = resources.get("TotalEnergyLimit", None)
 
         if total_energy_used is None or total_energy_limit is None:
-            raise ValueError("Не удалось получить корректные данные об энергии")
+            raise ValueError(
+                "Не удалось получить корректные данные об энергии")
 
         remaining_energy = total_energy_limit - total_energy_used
-
         return remaining_energy
-    except ValueError as e:
-        logging.error(
-            f"Ошибка при вычислении энергии для адреса {address}")
-        return {"error": str(e)}
     except Exception as e:
-        logging.error(
-            f"Произошла ошибка при получении энергии для адреса {address}: {e}")
-        return {"error": "Произошла ошибка при получении энергии"}
+        logger.error(f"Ошибка при получении энергии для {address}: {e}")
+        return None
 
 
 def get_wallet_info(address: str):
     try:
+        balance = client.get_account_balance(address)
+        bandwidth = client.get_bandwidth(address)
         energy = get_account_energy(address)
 
         return {
             "address": address,
-            "balance": client.get_account_balance(address),
-            "bandwidth": client.get_bandwidth(address),
+            "balance": balance,
+            "bandwidth": bandwidth,
             "energy": energy
         }
-
     except (AddressNotFound, BadAddress):
-        logging.error(f"Неверный адрес {address}")
-        return {"error": "Неверный адрес"}
+        logger.error(f"Неверный адрес: {address}")
+        raise HTTPException(status_code=400, detail="Неверный адрес")
     except Exception as e:
-        logging.error(f"Произошла ошибка при получении информации о "
-                      f"кошельке для {address}: {e}")
-        return {"error": "Произошла ошибка при получении информации о кошельке"}
+        logger.exception(f"Неожиданная ошибка: {e}")
+        raise HTTPException(status_code=500, detail="Внутрення ошибка сервера")
