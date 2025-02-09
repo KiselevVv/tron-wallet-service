@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 
 class WalletRequestModel(BaseModel):
+    """Модель данных для запроса информации о кошельке."""
     address: str
 
     class Config:
@@ -13,6 +14,7 @@ class WalletRequestModel(BaseModel):
 
 
 class WalletInfoResponse(BaseModel):
+    """Модель данных для ответа с информацией о кошельке."""
     address: str
     balance: Optional[int] = None
     bandwidth: Optional[int] = None
@@ -23,6 +25,7 @@ class WalletInfoResponse(BaseModel):
 
 
 class WalletRequestHistoryResponse(BaseModel):
+    """Модель для ответа с историей запросов на информацию о кошельке."""
     id: UUID
     wallet_address: str
     timestamp: datetime
@@ -32,6 +35,7 @@ class WalletRequestHistoryResponse(BaseModel):
 
 
 class PaginatedHistoryResponse(BaseModel):
+    """Модель для ответа с пагинированной историей запросов."""
     page: int
     per_page: int
     total: int

@@ -4,6 +4,7 @@ from app.models import WalletRequest
 
 
 def create_wallet_request(db: Session, wallet_address: str):
+    """Создаёт запись о запросе на информацию о кошельке."""
     try:
         db_wallet_request = WalletRequest(wallet_address=wallet_address)
         db.add(db_wallet_request)
@@ -16,6 +17,7 @@ def create_wallet_request(db: Session, wallet_address: str):
 
 
 def get_wallet_requests(db: Session, page: int = 1, per_page: int = 10):
+    """Получает историю запросов на информацию о кошельках с пагинацией."""
     try:
         query = db.query(WalletRequest)
         total_records = query.count()

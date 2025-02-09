@@ -11,6 +11,7 @@ client = Tron(network="nile")  # тестовая сеть
 
 
 def get_account_energy(address: str):
+    """Получает данные об энергии для указанного адреса."""
     try:
         resources = client.get_account_resource(address)
 
@@ -29,6 +30,7 @@ def get_account_energy(address: str):
 
 
 def get_wallet_info(address: str):
+    """Получает информацию о кошельке, включая баланс, пропускную способность и энергию."""
     try:
         balance = client.get_account_balance(address)
         bandwidth = client.get_bandwidth(address)

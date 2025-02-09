@@ -6,6 +6,7 @@ from app.database import Base
 
 
 class WalletRequest(Base):
+    """Модель для хранения запросов на информацию о кошельке."""
     __tablename__ = "wallet_requests"
 
     id = Column(

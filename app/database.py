@@ -6,6 +6,7 @@ from app.core.config import settings
 
 
 def get_db():
+    """Функция для получения сессии базы данных."""
     db = SessionLocal()
     try:
         yield db
