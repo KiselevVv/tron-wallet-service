@@ -16,4 +16,4 @@ class WalletRequest(Base):
         index=True
     )
     wallet_address = Column(String(42), nullable=False, index=True)
-    timestamp = Column(DateTime, server_default=func.now())
+    timestamp = Column(DateTime, server_default=func.now(), index=True)
