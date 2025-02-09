@@ -29,3 +29,7 @@ def fetch_wallet_info(address: str, db: Session = Depends(get_db)):
     return data
 
 
+@app.get("/history")
+def get_wallet_requests(page: int = 1, per_page: int = 10, db: Session = Depends(get_db)):
+    return crud.get_wallet_requests(db, page, per_page)
+
