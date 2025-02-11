@@ -1,29 +1,53 @@
-version: "3.8"
+version: '3.8'
 
 services:
   db:
-    image: postgres:15
-    container_name: my_db
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - "5432:5432"
+    image: postgres:13
+    profiles: ["dev"]
+    env_file: .env.dev
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+  test-db:
+    image: postgres:13
+    profiles: ["test"]
+    env_file: .env.test
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
 
   web:
     build: .
-    container_name: my_app
-    restart: always
-    env_file:
-      - .env
-    depends_on:
-      - db
+    profiles: ["dev"]
+    env_file: .env.dev
+    environment:
+      - ENV_FILE=.env.dev
     ports:
       - "8000:8000"
-    command: [ "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  tests:
+    build: .
+    profiles: ["test"]
+    env_file: .env.test
+    environment:
+      - ENV_FILE=.env.test
+    command: pytest
+    depends_on:
+      test-db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
+  test_postgres_data:

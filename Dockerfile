@@ -9,4 +9,4 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port 8000 --env-file ${ENV_FILE:-.env}"]

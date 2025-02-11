@@ -4,62 +4,50 @@
 ## Клонирование репозитория
 Склонируйте проект к себе на локальную машину:
 ```bash
-git@github.com:KiselevVv/tron-wallet-service.git
+git clone git@github.com:KiselevVv/tron-wallet-service.git
 ```
 
 ---
 
 ## Настройка переменных окружения
-Создайте файл **`.env`** в корневой директории и добавьте в него настройки базы данных:
+Создайте файл **`.env.dev`** в корневой директории и добавьте в него настройки базы данных:
 
 ```
-# используются для подключения и создания БД в Docker
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=mydatabase
 DATABASE_URL=postgresql://postgres:postgres@db/mydatabase
+```
 
-# используется для создания БД в Docker
-TEST_POSTGRES_DB=test_database
+Создайте файл **`.env.test`** в корневой директории и добавьте в него настройки базы данных:
+
+```
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=test_database
+DATABASE_URL=postgresql://postgres:postgres@test-db/test_database
 ```
 
 ---
 
 ## Сборка и запуск контейнеров
-Соберите и запустите контейнеры в фоновом режиме:
+Соберите и запустите контейнеры для проверки функционала:
 ```bash
-docker-compose up -d --build
+docker-compose --profile dev up -d --build
 ```
 Проверить функциальность - http://localhost:8000/docs
 
 ---
 
 ## Запуск тестов
-### Если контейнер запущен, его необходимо остановить
+### Если контейнер запущен, его можно остановить
 ```bash
-docker-compose down
+docker-compose --profile dev down
+
 ```
 
-### Затем изменить параметры в .env
-```
-# используются для подключения и создания БД в Docker
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=test_database
-DATABASE_URL=postgresql://postgres:postgres@db/test_database
-
-# используется для создания БД в Docker
-TEST_POSTGRES_DB=test_database
-```
-
-### Снова запустить контейнер
+### Для запуска тестов
 ```bash
-docker-compose up -d
-
-```
-
-### И запустить тесты
-```bash
-docker-compose exec web pytest
+docker-compose --profile test up --build --abort-on-container-exit
 
 ```
