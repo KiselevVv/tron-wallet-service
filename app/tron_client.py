@@ -19,8 +19,7 @@ def get_account_energy(address: str):
         total_energy_limit = resources.get("TotalEnergyLimit", None)
 
         if total_energy_used is None or total_energy_limit is None:
-            raise ValueError(
-                "Не удалось получить корректные данные об энергии")
+            raise ValueError("Не удалось получить корректные данные об энергии")
 
         remaining_energy = total_energy_limit - total_energy_used
         return remaining_energy
@@ -40,7 +39,7 @@ def get_wallet_info(address: str):
             "address": address,
             "balance": balance,
             "bandwidth": bandwidth,
-            "energy": energy
+            "energy": energy,
         }
     except (AddressNotFound, BadAddress):
         logger.error(f"Неверный адрес: {address}")

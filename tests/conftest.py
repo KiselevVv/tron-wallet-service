@@ -1,7 +1,8 @@
 import pytest
 from sqlalchemy import create_engine
-from app.database import Base, SessionLocal
+
 from app.core.config import settings
+from app.database import Base, SessionLocal
 
 
 # Создание временной базы данных для тестирования
